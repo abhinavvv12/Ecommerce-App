@@ -1,24 +1,32 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Finlandica+Headline:ital,wght@0,100..900;1,100..900&family=Manrope:wght@200..800&family=Momo+Signature&family=Prata&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Prata&display=swap');
 
 @import "tailwindcss";
 
-a.active hr{
+/* Default font for the entire website */
+* {
+    box-sizing: border-box;
+    font-family: "Outfit", sans-serif;
+}
+
+/* Prata font class */
+.prata-regular {
+    font-family: "Prata", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+::-webkit-scrollbar{
+    display: none;
+}
+
+/* Active navbar underline */
+a.active hr {
     display: block;
 }
 
-*{
-    font-family: Outfit;
-}
-
-.prata-regular {
-  font-family: "Prata", serif;
-  font-weight: 400;
-  font-style: normal;
-}
-
-@media (max-width:640px) {
-    a.active{
-        background-color:black ;
+/* Mobile navbar active link */
+@media (max-width: 640px) {
+    a.active {
+        background-color: black;
         color: white;
     }
 }
