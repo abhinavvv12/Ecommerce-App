@@ -44,8 +44,8 @@ const Add = ({ token }) => {
 
       if (response.data.success) {
         toast.success(response.data.message)
-        setName('');
-        setDescription('');
+        // setName('');
+        // setDescription('');
         setImage1(false);
         setImage2(false);
         setImage3(false);

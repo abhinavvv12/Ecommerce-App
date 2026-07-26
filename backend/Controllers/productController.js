@@ -3,6 +3,7 @@ import productModel from '../models/productModel.js'
 
 // function for add product
 const addProduct = async (req, res) => {
+    console.log("✅ addProduct route hit");
     try {
         const { name, description, price, category, subCategory, sizes, bestSeller } = req.body;
 
@@ -11,7 +12,14 @@ const addProduct = async (req, res) => {
         const image3 = req.files.image3 && req.files.image3[0]
         const image4 = req.files.image4 && req.files.image4[0]
 
+        console.log("1. Controller started");
+
+
         const images = [image1, image2, image3, image4].filter((item) => item !== undefined)
+
+        console.log("2. Images:", images);
+
+        console.log("3. Before Cloudinary");
 
         let imagesUrl = await Promise.all(
             images.map(async (item) => {
@@ -33,14 +41,20 @@ const addProduct = async (req, res) => {
             date: Date.now()
 
         }
-        console.log(productData);
+
+        console.log("4. Cloudinary done");
+
         const product = new productModel(productData);
+
+        console.log("5. Before save");
         await product.save()
+        console.log("6. Saved");
 
         res.json({success:true, message:"Product Added"})
 
     } catch (error) {
         console.log(error);
+        console.log(error.message);
 
         res.json({
             success: false,
