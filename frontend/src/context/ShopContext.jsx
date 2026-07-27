@@ -19,6 +19,10 @@ const ShopContextProvider = (props) => {
 
     const addToCart = async (itemId, size) => {
 
+        console.log("cartItems:", cartItems);
+        console.log("itemId:", itemId);
+        console.log("size:", size);
+
         if (!size) {
             toast.error('Select Product Size')
             return;
@@ -74,9 +78,9 @@ const ShopContextProvider = (props) => {
 
         setCartItems(cartData);
 
-        if(token) {
+        if (token) {
             try {
-                await axios.post(backendUrl + '/api/cart/update', {itemId, size, quantity}, {headers: {token}})
+                await axios.post(backendUrl + '/api/cart/update', { itemId, size, quantity }, { headers: { token } })
             } catch (error) {
                 console.log(error)
                 toast.error(error.message)
@@ -118,12 +122,12 @@ const ShopContextProvider = (props) => {
         }
     }
 
-    const getUserCart = async(token) => {
+    const getUserCart = async (token) => {
         try {
-            const response = await axios.post(backendUrl+ '/api/cart/get', {}, {headers: {token}})
+            const response = await axios.post(backendUrl + '/api/cart/get', {}, { headers: { token } })
 
-            if(response.data.success) {
-                setCartItems(response.data.cartData)
+            if (response.data.success) {
+                setCartItems(response.data.cartData || {})
             }
         } catch (error) {
             console.log(error)
@@ -146,6 +150,7 @@ const ShopContextProvider = (props) => {
         products, currency, delivery_fee,
         search, setSearch, showSearch, setShowSearch,
         cartItems, addToCart,
+        setCartItems,
         getCartCount,
         updateQuantity,
         getCartAmount,

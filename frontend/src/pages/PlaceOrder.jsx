@@ -3,6 +3,8 @@ import Title from '../components/Title'
 import CartTotal from '../components/CartTotal'
 import { assets } from '../assets/assets'
 import { ShopContext } from '../context/ShopContext'
+import { toast } from 'react-toastify'
+import axios from 'axios'
 
 const PlaceOrder = () => {
 
@@ -15,6 +17,7 @@ const PlaceOrder = () => {
     email: '',
     street:'',
     city: '',
+    state:'',
     zipcode: '',
     country: '',
     phone: ''
@@ -29,7 +32,7 @@ const PlaceOrder = () => {
   }
 
   const onSubmitHandler = async(e) => {
-    e.preventdefault()
+    e.preventDefault()
 
     try {
       let orderItems = []
@@ -45,15 +48,31 @@ const PlaceOrder = () => {
           }
         }
       }
-      console.log(orderData)
       
       let orderData = {
         address: formData,
         items:orderItems,
-        amount: getCartAmount() + delivery_fee
+        amount: getCartAmount() + delivery_fee,
+      }
+
+      switch (method) {
+
+        case 'cod':
+          const response = await axios.post(backendUrl+ '/api/order/place', orderData,{headers: {token}})
+          if (response.data.success) {
+            setCartItems({})
+            navigate('/orders')
+          }
+          else{
+            toast.error(response.data.message)
+          }
+          break;
+        default:
+          break;
+
       }
     }catch (error) {
-
+      console.log(error)
     }
   }
 

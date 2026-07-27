@@ -11,34 +11,28 @@ const Cart = () => {
   const [cartData, setCartData] = useState([])
 
   useEffect(() => {
-
     if (products.length > 0) {
-      const tempData = []
+      const tempData = [];
 
       for (const items in cartItems) {
         for (const item in cartItems[items]) {
-
           if (cartItems[items][item] > 0) {
-
             tempData.push({
               _id: items,
               size: item,
-              quantity: cartItems[items][item]
-            })
-
+              quantity: cartItems[items][item],
+            });
           }
-
         }
       }
 
-      setCartData(tempData)
+      setCartData(tempData);
     }
-
-    const tempData = []
-
-  }, [cartItems])
+  }, [cartItems, products]);
 
   return (
+    console.log("cartData:", cartData),
+    console.log("products:", products),
     <div className='border-t pt-14'>
 
       <div className='text-2xl mb-3'>
@@ -50,9 +44,18 @@ const Cart = () => {
         {
           cartData.map((item, index) => {
 
+            console.log("Cart item id:", item._id);
+
             const productData = products.find(
-              (product) => product._id === item._id
-            )
+              product => product._id === item._id
+            );
+
+            console.log("Matched product:", productData);
+
+            if (!productData) {
+              console.log("No matching product found");
+              return null;
+            }
 
             return (
               <div

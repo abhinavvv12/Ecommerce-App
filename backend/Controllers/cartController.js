@@ -30,7 +30,7 @@ const addToCart = async (req, res) => {
     } catch (error) {
         console.log(error)
         res.json({
-            success: true,
+            success: false,
             message: error.message
         })
     }
@@ -57,7 +57,7 @@ const updateCart = async (req, res) => {
     } catch (error) {
         console.log(error)
         res.json({
-            success: true,
+            success: false,
             message: error.message
         })
     }
@@ -81,7 +81,7 @@ const getUserCart = async (req, res) => {
     } catch (error) {
         console.log(error)
         res.json({
-            success: true,
+            success: false,
             message: error.message
         })
     }
