@@ -51,6 +51,7 @@ const loginUser = async (req, res) => {
 // Route for register user
 const registerUser = async (req, res) => {
     try {
+        console.log("backend hit")
         console.log("Ready State:", mongoose.connection.readyState);
         const { name, email, password } = req.body;
 
@@ -69,7 +70,7 @@ const registerUser = async (req, res) => {
             return res.json({ success: false, message: "Please Enter a Strong password" })
         }
 
-
+        
         // hashing user password
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt)
