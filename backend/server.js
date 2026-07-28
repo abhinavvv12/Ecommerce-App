@@ -15,14 +15,14 @@ const app = express()
 const port = process.env.PORT || 4000;
 
 // middlewares
-app.use(express.json());
 app.use(cors({
     origin: [
         "http://localhost:5173",
-        "https://forever-frontend-fawn-nu.vercel.app"
+        "https://forever-frontend-vert-two.vercel.app"
     ],
     credentials: true
 }));
+app.use(express.json());
 
 // Database Connection
 await connectDB();
@@ -30,20 +30,20 @@ connectCloudinary();
 
 // API Endpoints
 
-app.use('/api/user/',userRouter)
-app.use('/api/product/',productRouter)
-app.use('/api/cart',cartRouter)
+app.use('/api/user/', userRouter)
+app.use('/api/product/', productRouter)
+app.use('/api/cart', cartRouter)
 
 app.use('/api/order', orderRouter)
 
-app.get('/',(req,res)=>{
+app.get('/', (req, res) => {
     res.send("API Working");
 });
 
 
 
-app.listen(port, ()=>{
-    console.log("Server Started at port:",port);
+app.listen(port, () => {
+    console.log("Server Started at port:", port);
 })
 
 
