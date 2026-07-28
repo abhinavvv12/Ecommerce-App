@@ -16,7 +16,13 @@ const port = process.env.PORT || 4000;
 
 // middlewares
 app.use(express.json());
-app.use(cors())
+app.use(cors({
+    origin: [
+        "http://localhost:5173",
+        "https://forever-frontend-fawn-nu.vercel.app"
+    ],
+    credentials: true
+}));
 
 // Database Connection
 await connectDB();
