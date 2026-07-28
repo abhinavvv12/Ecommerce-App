@@ -1,6 +1,5 @@
 import express from 'express'
 import {listProduct, addProduct, removeProduct, singleProduct} from '../Controllers/productController.js'
-import { list } from 'postcss';
 import upload from '../middlewares/multer.js';
 import adminAuth from '../middlewares/adminAuth.js';
 
