@@ -10,6 +10,9 @@ const Orders = () => {
   const [orderData, setOrderData] = useState([])
 
   const loadOrderdata = async() =>{
+
+    console.log(token);
+    
     try {
       if (!token) {
         return null

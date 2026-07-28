@@ -5,34 +5,33 @@ import { assets } from '../assets/assets'
 import { ShopContext } from '../context/ShopContext'
 import { toast } from 'react-toastify'
 import axios from 'axios'
-import { Cursor } from 'mongoose'
 
 const PlaceOrder = () => {
 
-  const[method, setMethod] = useState('cod'); 
-  const {navigate, backendUrl, token, cartItems,setCartItems, getCartAmount, delivery_fee, products} = useContext(ShopContext)
+  const [method, setMethod] = useState('cod');
+  const { navigate, backendUrl, token, cartItems, setCartItems, getCartAmount, delivery_fee, products } = useContext(ShopContext)
 
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     email: '',
-    street:'',
+    street: '',
     city: '',
-    state:'',
+    state: '',
     zipcode: '',
     country: '',
     phone: ''
   })
 
-  const onChangeHandler = (event)=>{
+  const onChangeHandler = (event) => {
     const name = event.target.name
     const value = event.target.value
 
-    setFormData(data => ({...data,[name]:value}))
+    setFormData(data => ({ ...data, [name]: value }))
 
   }
 
-  const initPay = (order)=>{
+  const initPay = (order) => {
 
     const options = {
       key: import.meta.env.VITE_RAZORPAY_KEY_ID,
@@ -42,10 +41,10 @@ const PlaceOrder = () => {
       description: 'Order Payment',
       order_id: order.id,
       receipt: order.receipt,
-      handler: async(response)=>{
+      handler: async (response) => {
         console.log(response);
         try {
-          const { data } = await axios.post(backendUrl + '/api/order/verifyRazorpay',response, {headers:{token}})
+          const { data } = await axios.post(backendUrl + '/api/order/verifyRazorpay', response, { headers: { token } })
 
           if (data.success) {
             navigate('/orders')
@@ -63,14 +62,14 @@ const PlaceOrder = () => {
   }
 
 
-  const onSubmitHandler = async(e) => {
+  const onSubmitHandler = async (e) => {
     e.preventDefault()
 
     try {
       let orderItems = []
-      for(const items in cartItems) {
-        for(const item in cartItems[items]){
-          if (cartItems[items][item] > 0){
+      for (const items in cartItems) {
+        for (const item in cartItems[items]) {
+          if (cartItems[items][item] > 0) {
             const itemInfo = structuredClone(products.find(product => product._id === items))
             if (itemInfo) {
               itemInfo.size = item
@@ -80,50 +79,50 @@ const PlaceOrder = () => {
           }
         }
       }
-      
+
       let orderData = {
         address: formData,
-        items:orderItems,
+        items: orderItems,
         amount: getCartAmount() + delivery_fee,
       }
 
       switch (method) {
 
         case 'cod':
-          const response = await axios.post(backendUrl+ '/api/order/place', orderData,{headers: {token}})
+          const response = await axios.post(backendUrl + '/api/order/place', orderData, { headers: { token } })
           if (response.data.success) {
             setCartItems({})
             navigate('/orders')
           }
-          else{
+          else {
             toast.error(response.data.message)
           }
           break;
 
         case 'stripe':
-          const responseStripe = await axios.post(backendUrl + '/api/order/stripe',orderData,{headers:{token}})
-          if(responseStripe.data.success){
-            const{session_url} = responseStripe.data
+          const responseStripe = await axios.post(backendUrl + '/api/order/stripe', orderData, { headers: { token } })
+          if (responseStripe.data.success) {
+            const { session_url } = responseStripe.data
             window.location.replace(session_url)
-          }else{
+          } else {
             toast.error(responseStripe.data.message)
           }
           break;
 
         case 'razorpay':
 
-        const responseRazorpay = await axios.post(backendUrl + '/api/order/razorpay',orderData,{headers:{token}})
+          const responseRazorpay = await axios.post(backendUrl + '/api/order/razorpay', orderData, { headers: { token } })
 
-        if (responseRazorpay.data.success) {
-          initPay(responseRazorpay.data.order);
-        }
+          if (responseRazorpay.data.success) {
+            initPay(responseRazorpay.data.order);
+          }
 
           break;
         default:
           break;
 
       }
-    }catch (error) {
+    } catch (error) {
       console.log(error)
     }
   }
@@ -138,19 +137,19 @@ const PlaceOrder = () => {
         </div>
         <div className='flex gap-3'>
           <input required onChange={onChangeHandler} name='firstName' value={formData.firstName} className='border w-full border-gray-300 rounded py-1.5 px-3.5' type="text" placeholder='First Name' />
-          <input required  onChange={onChangeHandler} name='lastName' value={formData.lastName} className='border w-full border-gray-300 rounded py-1.5 px-3.5' type="text" placeholder='Last Name' />
+          <input required onChange={onChangeHandler} name='lastName' value={formData.lastName} className='border w-full border-gray-300 rounded py-1.5 px-3.5' type="text" placeholder='Last Name' />
         </div>
-        <input required  onChange={onChangeHandler} name='email' value={formData.email} className='border w-full border-gray-300 rounded py-1.5 px-3.5' type="email" placeholder='Email Address' />
-        <input required  onChange={onChangeHandler} name='street' value={formData.street} className='border border-gray-300 w-full rounded py-1.5 px-3.5' type="text" placeholder='Street' />
+        <input required onChange={onChangeHandler} name='email' value={formData.email} className='border w-full border-gray-300 rounded py-1.5 px-3.5' type="email" placeholder='Email Address' />
+        <input required onChange={onChangeHandler} name='street' value={formData.street} className='border border-gray-300 w-full rounded py-1.5 px-3.5' type="text" placeholder='Street' />
         <div className='flex gap-3'>
-          <input required  onChange={onChangeHandler} name='city' value={formData.city} className='border w-full border-gray-300 rounded py-1.5 px-3.5' type="text" placeholder='City' />
-          <input required  onChange={onChangeHandler} name='state' value={formData.state} className='border w-full border-gray-300 rounded py-1.5 px-3.5' type="text" placeholder='State' />
+          <input required onChange={onChangeHandler} name='city' value={formData.city} className='border w-full border-gray-300 rounded py-1.5 px-3.5' type="text" placeholder='City' />
+          <input required onChange={onChangeHandler} name='state' value={formData.state} className='border w-full border-gray-300 rounded py-1.5 px-3.5' type="text" placeholder='State' />
         </div>
         <div className='flex gap-3'>
-          <input  required onChange={onChangeHandler} name='zipcode' value={formData.zipcode} className='border w-full border-gray-300 rounded py-1.5 px-3.5' type="text" placeholder='Zipcode' />
-          <input required  onChange={onChangeHandler} name='country' value={formData.country} className='border w-full border-gray-300 rounded py-1.5 px-3.5' type="text" placeholder='Country'/>
+          <input required onChange={onChangeHandler} name='zipcode' value={formData.zipcode} className='border w-full border-gray-300 rounded py-1.5 px-3.5' type="text" placeholder='Zipcode' />
+          <input required onChange={onChangeHandler} name='country' value={formData.country} className='border w-full border-gray-300 rounded py-1.5 px-3.5' type="text" placeholder='Country' />
         </div>
-        <input required  onChange={onChangeHandler} name='phone' value={formData.phone} className='border w-full border-gray-300 rounded py-1.5 px-3.5' type="number" placeholder='phone number'/>
+        <input required onChange={onChangeHandler} name='phone' value={formData.phone} className='border w-full border-gray-300 rounded py-1.5 px-3.5' type="number" placeholder='phone number' />
       </div>
 
       {/* Right Side */}
@@ -162,26 +161,26 @@ const PlaceOrder = () => {
           <Title text1={'PAYMENT'} text2={'METHOD'} />
           {/* payment  method selection */}
           <div className='flex flex-col sm:flex-row gap-3 mt-4'>
-            <div onClick={()=>setMethod('stripe')} className='flex items-center gap-3 border p-2 px-3 cursor-pointer'>
+            <div onClick={() => setMethod('stripe')} className='flex items-center gap-3 border  p-2 px-3 cursor-pointer'>
               <p className={`min-w-3.5 h-3.5 border rounded-full ${method === 'stripe' ? 'bg-green-400' : ''}`}></p>
-              <img className='h-5 mx-4' src={assets.stripe_logo} alt="" />
+              <img className='h-5 mx-10' src={assets.stripe_logo} alt="" />
             </div>
-            <div onClick={()=>setMethod('razorpay')} className='flex items-center gap-3 border p-2 px-3 cursor-pointer'>
+            <div onClick={() => setMethod('razorpay')} className='flex items-center gap-3  border p-2 px-3 cursor-pointer'>
               <p className={`min-w-3.5 h-3.5 border rounded-full ${method === 'razorpay' ? 'bg-green-400' : ''}`}></p>
-              <img className='h-5 mx-4' src={assets.razorpay_logo} alt="" />
+              <img className='h-5 mx-4 w-25' src={assets.razorpay_logo} alt="" />
             </div>
-            <div onClick={()=>setMethod('cod')} className='flex items-center gap-3 border p-2 px-3 cursor-pointer'>
+            <div onClick={() => setMethod('cod')} className='flex items-center gap-3 border  p-2 px-3 cursor-pointer'>
               <p className={`min-w-3.5 h-3.5 border rounded-full ${method === 'cod' ? 'bg-green-400' : ''}`}></p>
               <p className='text-gray-500 text-sm font-medium mx-4  '>CASH ON DELIVERY</p>
             </div>
           </div>
         </div>
+        <div className='w-full text-end mt-8'>
+          <button type='submit' className='bg-black text-white px-16 py-3 text-sm cursor-pointer '>PLACE ORDER</button>
+        </div>
       </div>
 
-      <div className='w-full text-end mt-8'>
-        <button type='submit'className='bg-black text-white px-16 py-3 text-sm cursor-pointer '>PLACE ORDER</button>
-      </div>
-      
+
     </form>
   )
 }
