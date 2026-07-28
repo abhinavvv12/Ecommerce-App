@@ -18,7 +18,9 @@ const port = process.env.PORT || 4000;
 app.use(cors({
     origin: [
         "http://localhost:5173",
-        "https://forever-frontend-vert-two.vercel.app"
+        "http://localhost:5174", 
+        "https://forever-frontend-vert-two.vercel.app",
+        "https://forever-admin-three-chi.vercel.app"
     ],
     credentials: true
 }));
